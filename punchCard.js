@@ -25,11 +25,15 @@ function processPerHourData(result) {
   }
   return temp;
 }
+function drawPerHourGraph(data) {
+    console.log(data);
+}
 // data for commit per hour per day
-// $.ajax({
-//   url:
-//     "https://api.github.com/repos/torvalds/linux/stats/punch_card?access_token="+access_token,
-//   success: function(result) {
-//     console.log(processPerHourData(result));
-//   }
-// });
+$.ajax({
+  url:
+    "https://api.github.com/repos/torvalds/linux/stats/punch_card?access_token="+access_token,
+  success: function(result) {
+    var data = processPerHourData(result);
+    drawPerHourGraph(data);
+  }
+});

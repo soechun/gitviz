@@ -16,11 +16,14 @@ function processLanguages(result) {
         }
     return temp
 }
+function drawLanguageGraph(data) {
+    console.log(data);
+}
 $.ajax({
     url:
     "https://api.github.com/users/torvalds/repos?access_token="+access_token,
     success: function(result) {
-        
-        console.log(processLanguages(result));
+        var data = processLanguages(result);
+        drawLanguageGraph(data);
     }
 })

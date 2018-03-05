@@ -22,12 +22,16 @@ function processParticipationData(data) {
   }
   return temp;
 }
+function drawParticipationGraph(data) {
+    console.log(data);
+}
 // data for commit per owner/all
-// $.ajax({
-//   url:
-//     "https://api.github.com/repos/torvalds/linux/stats/participation?access_token="+access_token,
-//   data: {},
-//   success: function(result) {
-//     console.log(processParticipationData(result));
-//   }
-// });
+$.ajax({
+  url:
+    "https://api.github.com/repos/torvalds/linux/stats/participation?access_token="+access_token,
+  data: {},
+  success: function(result) {
+    var data = processParticipationData(result);
+    drawParticipationGraph(data);
+  }
+});
