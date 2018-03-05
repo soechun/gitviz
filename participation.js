@@ -25,7 +25,7 @@ function processParticipationData(data) {
 // data for commit per owner/all
 // $.ajax({
 //   url:
-//     "https://api.github.com/repos/torvalds/linux/stats/participation?access_token=97642aeb49b46b4815569d492d3380e53129b90e",
+//     "https://api.github.com/repos/torvalds/linux/stats/participation?access_token="+access_token,
 //   data: {},
 //   success: function(result) {
 //     console.log(processParticipationData(result));

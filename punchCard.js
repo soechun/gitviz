@@ -28,7 +28,7 @@ function processPerHourData(result) {
 // data for commit per hour per day
 // $.ajax({
 //   url:
-//     "https://api.github.com/repos/torvalds/linux/stats/punch_card?access_token=97642aeb49b46b4815569d492d3380e53129b90e",
+//     "https://api.github.com/repos/torvalds/linux/stats/punch_card?access_token="+access_token,
 //   success: function(result) {
 //     console.log(processPerHourData(result));
 //   }
