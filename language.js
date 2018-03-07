@@ -20,9 +20,9 @@ var x1 = d3
     .scaleBand()
     .padding(0.05);
 
-var y = d3
-    .scaleLinear()
-    .rangeRound([height, 0]);
+// var y = d3
+//     .scaleLinear()
+//     .rangeRound([height, 0]);
 
 var z = d3
     .scaleOrdinal()
@@ -111,14 +111,20 @@ function drawLanguageGraph(data) {
         .rangeRound([
             0, x0.bandwidth()
         ]);
-    y.domain([
-        0,
-        d3.max(data, function (d) {
-            return d3.max(keys, function (key) {
-                return d[key];
-            });
+    var y = d3.scaleLog().domain([10000000,d3.max(data, function(d) {
+        return d3.max(keys, function(key) {
+            return d[key];
         })
-    ]).nice();
+    })])
+    .range([height,0])
+    // y.domain([
+    //     0,
+    //     d3.max(data, function (d) {
+    //         return d3.max(keys, function (key) {
+    //             return d[key];
+    //         });
+    //     })
+    // ]).nice();
 
     g
         .append("g")
