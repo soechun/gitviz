@@ -1,5 +1,5 @@
 var svg1 = d3.select("#svg1"),
-    margin = {top: 500, right: 20, bottom: 30, left: 40},
+    margin = {top: 40, right: 20, bottom: 30, left: 40},
     width = +svg1.attr("width") - margin.left - margin.right,
     height = +svg1.attr("height") - margin.top - margin.bottom,
     g = svg1.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -63,7 +63,7 @@ function drawLanguageGraph(data) {
     .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
       .attr("x", function(d) { return x1(d.key); })
-      .attr("y", function(d) { return y(d.value); })
+      .attr("y", function(d) { return y(d.value ? d.value : 0); })
       .attr("width", x1.bandwidth())
       .attr("height", function(d) { return height - y(d.value); })
       .attr("fill", function(d) { return z(d.key); });
@@ -78,7 +78,7 @@ function drawLanguageGraph(data) {
       .call(d3.axisLeft(y).ticks(null, "s"))
     .append("text")
       .attr("x", 2)
-      .attr("y", y(y.ticks().pop()) + 0.5)
+      .attr("y", y(y.ticks().pop()) + 10)
       .attr("dy", "0.32em")
       .attr("fill", "#000")
       .attr("font-weight", "bold")
