@@ -65,7 +65,7 @@ function drawLanguageGraph(data) {
       .attr("x", function(d) { return x1(d.key); })
       .attr("y", function(d) { return y(d.value ? d.value : 0); })
       .attr("width", x1.bandwidth())
-      .attr("height", function(d) { return height - y(d.value); })
+      .attr("height", function(d) { return height - y(d.value ? d.value : 0); })
       .attr("fill", function(d) { return z(d.key); });
 
   g.append("g")
