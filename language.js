@@ -1,9 +1,9 @@
 var svg1 = d3.select("#svg1"),
     margin = {
         top: 40,
-        right: 20,
+        right: 66,
         bottom: 30,
-        left: 40
+        left: 100
     },
     width = +svg1.attr("width") - margin.left - margin.right,
     height = +svg1.attr("height") - margin.top - margin.bottom,
@@ -81,7 +81,7 @@ function processLanguages(result) {
             for (var key in data) {
                 repoSet.add(this._repo);
                 langSet.add(key);
-                tem[key] = data[key];
+                tem[key] = data[key]/1000;
             }
             dataset.push(tem)
             dataset['repoSet'] = repoSet;
@@ -111,7 +111,7 @@ function drawLanguageGraph(data) {
         .rangeRound([
             0, x0.bandwidth()
         ]);
-    var y = d3.scaleLog().domain([10000000,d3.max(data, function(d) {
+    var y = d3.scaleLog().domain([0.01,d3.max(data, function(d) {
         return d3.max(keys, function(key) {
             return d[key];
         })
@@ -147,15 +147,15 @@ function drawLanguageGraph(data) {
             return x1(d.key);
         })
         .attr("y", function (d) {
-            return y(d.value
-                ? d.value
-                : 0);
+            return d.value
+                ? y(d.value)
+                : 0;
         })
         .attr("width", x1.bandwidth())
         .attr("height", function (d) {
-            return height - y(d.value
-                ? d.value
-                : 0);
+            return d.value
+                ? height - y(d.value)
+                : 0;
         })
         .attr("fill", function (d) {
             return z(d.key);
@@ -174,11 +174,11 @@ function drawLanguageGraph(data) {
         .append("text")
         .attr("x", 2)
         .attr("y", y(y.ticks().pop()) + 10)
-        .attr("dy", "0.32em")
+        .attr("dy", "0.1em")
         .attr("fill", "#000")
         .attr("font-weight", "bold")
         .attr("text-anchor", "start")
-        .text("Total bytes for the language");
+        .text("Total kilobytes for the language");
 
     var legend = g
         .append("g")
@@ -190,7 +190,7 @@ function drawLanguageGraph(data) {
         .enter()
         .append("g")
         .attr("transform", function (d, i) {
-            return "translate(0," + i * 20 + ")";
+            return "translate(65," + i * 20 + ")";
         });
 
     legend

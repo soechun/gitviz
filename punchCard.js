@@ -45,8 +45,8 @@ function drawPertimeGraph(data) {
       bottom: 100,
       left: 30
     },
-    width = 500 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom,
+    width = 1000 - margin.left - margin.right,
+    height = 700 - margin.top - margin.bottom,
     gridSize = Math.floor(width / 13),
     legendElementWidth = gridSize * 1,
     buckets = 9,
