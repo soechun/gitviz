@@ -1,66 +1,36 @@
-var svg1 = d3.select("#svg1"),
-    margin = {
-        top: 40,
-        right: 66,
-        bottom: 30,
-        left: 100
-    },
-    width = +svg1.attr("width") - margin.left - margin.right,
-    height = +svg1.attr("height") - margin.top - margin.bottom,
-    g = svg1
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var x0 = d3
-    .scaleBand()
-    .rangeRound([0, width])
-    .paddingInner(0.1);
-
-var x1 = d3
-    .scaleBand()
-    .padding(0.05);
-
-// var y = d3
-//     .scaleLinear()
-//     .rangeRound([height, 0]);
-
 var z = d3
     .scaleOrdinal()
     .range([
-        "#55efc4",
-        "#81ecec",
-        "#74b9ff",
-        "#a29bfe",
-        "#dfe6e9",
-        "#00b894",
-        "#00cec9",
-        "#0984e3",
-        "#6c5ce7",
-        "#b2bec3",
-        "#ffeaa7",
-        "#fab1a0",
-        "#ff7675",
-        "#fd79a8",
-        "#636e72",
-        "#fdcb6e",
-        "#e17055",
-        "#d63031",
-        "#e84393",
-        "#2d3436",
-        "#f3a683",
-        "#f19066",
-        "#786fa6",
-        "#574b90",
-        "#f8a5c2",
-        "#f78fb3",
-        "#63cdda",
-        "#3dc1d3",
-        "#ea8685",
-        "#e66767",
-        "#f7d794",
-        "#f5cd79",
-        "#778beb",
-        "#546de5"
+    "#abdbf2",
+    "#84caec",
+    "#5cbae5",
+    "#27a3dd",
+    "#1b7eac",
+    "#156489",
+    "#d7eaa2",
+    "#c6e17d",
+    "#b6d957",
+    "#9dc62d",
+    "#759422",
+    "#5b731a",
+    "#fde5bd",
+    "#fbd491",
+    "#fac364",
+    "#f8ac29",
+    "#dd8e07",
+    "#b57506",
+    "#d5dadc",
+    "#bac1c4",
+    "#9ea8ad",
+    "#848f94",
+    "#69767c",
+    "#596468",
+    "#f99494",
+    "#f66364",
+    "#f33334",
+    "#dc0d0e",
+    "#b90c0d",
+    "#930a0a"
     ]);
 
 function processLanguages(result) {
@@ -69,6 +39,7 @@ function processLanguages(result) {
     var temp = [];
     var dataset = [];
     var test = [];
+    var size = 0;
     for (var i = 0; i < result.length; i++) {
         var item = result[i]
 
@@ -78,53 +49,85 @@ function processLanguages(result) {
         }).then(function (data) {
             var tem = {};
             tem['repo'] = this._repo;
+            let tempLanSet = new Set();
             for (var key in data) {
                 repoSet.add(this._repo);
                 langSet.add(key);
+                tempLanSet.add(key);
                 tem[key] = data[key]/1000;
+                size = size + 1;
             }
+            tem['lanContained'] = tempLanSet;
             dataset.push(tem)
             dataset['repoSet'] = repoSet;
             dataset['langSet'] = langSet;
-            console.log(tem)
+            dataset['len'] = size;
         }));
     }
     $
         .when
         .apply(this, test)
         .then(function () {
-            console.log('temp', dataset.length);
             drawLanguageGraph(dataset)
         });
-    console.log(temp);
     return temp
 }
 function drawLanguageGraph(data) {
-    console.log(data[0]);
-    // var keys = data.columns.slice(1, -1);
+    var svg1 = d3.select("#svg1"),
+    margin = {
+        top: 60,
+        right: 100,
+        bottom: 30,
+        left: 100
+    },
+
+    width = +svg1.attr("width") - margin.left - margin.right,
+    height = +svg1.attr("height") - margin.top - margin.bottom,
+    
+    g = svg1
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
     let keys = Array.from(data.langSet);
-    x0.domain(data.map(function (d) {
-        return d.repo;
-    }));
-    x1
-        .domain(keys)
-        .rangeRound([
-            0, x0.bandwidth()
-        ]);
+    var rangeList = [];
+    var rangeAxisXList = [];
+    barWidth = (width - 200) / (data.len) ;  
+    var offset=20; 
+    for (k = 0; k < data.length; k++) { 
+        rangeList.push(offset); 
+        rangeAxisXList.push(offset+data[k].lanContained.size * barWidth/2);
+        offset = offset+data[k].lanContained.size * barWidth + 15;
+    }
+
+    var x0 = d3.scaleOrdinal()
+        .domain(data.map(function (d) {
+                return d.repo;
+                }))
+        .range(rangeList);
+
+    var x0Axis = d3.scaleOrdinal()
+        .domain(data.map(function (d) {
+                return d.repo;
+                }))
+        .range(rangeAxisXList);
+
+
+    var repoX1 = {};
+    for (k = 0; k < data.length; k++) { 
+        repoX1[data[k].repo] = d3
+                .scaleBand()
+                .padding(0.05).domain(Array.from(data[k].lanContained))
+                .rangeRound([0, barWidth*(data[k].lanContained.size)]);
+    }
+
+   
+
     var y = d3.scaleLog().domain([0.01,d3.max(data, function(d) {
         return d3.max(keys, function(key) {
             return d[key];
         })
     })])
     .range([height,0])
-    // y.domain([
-    //     0,
-    //     d3.max(data, function (d) {
-    //         return d3.max(keys, function (key) {
-    //             return d[key];
-    //         });
-    //     })
-    // ]).nice();
 
     g
         .append("g")
@@ -137,25 +140,24 @@ function drawLanguageGraph(data) {
         })
         .selectAll("rect")
         .data(function (d) {
-            return keys.map(function (key) {
-                return {key: key, value: d[key]};
+            return Array.from(d.lanContained).map(function (key) {
+                return {repo: d.repo, key: key, value: d[key]};
             });
         })
+ 
         .enter()
         .append("rect")
         .attr("x", function (d) {
-            return x1(d.key);
+            return repoX1[d.repo](d.key);
         })
         .attr("y", function (d) {
-            return d.value
-                ? y(d.value)
-                : 0;
+            return y(d.value);
         })
-        .attr("width", x1.bandwidth())
+        .attr("width", function(d) {
+          return repoX1[d.repo].bandwidth();
+        })
         .attr("height", function (d) {
-            return d.value
-                ? height - y(d.value)
-                : 0;
+            return height - y(d.value);
         })
         .attr("fill", function (d) {
             return z(d.key);
@@ -164,8 +166,10 @@ function drawLanguageGraph(data) {
     g
         .append("g")
         .attr("class", "axis")
+        .data(data)
+        .attr("transform", "translate(0,"+height+")")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x0));
+        .call(d3.axisBottom(x0Axis));
 
     g
         .append("g")
@@ -173,7 +177,7 @@ function drawLanguageGraph(data) {
         .call(d3.axisLeft(y).ticks(null, "s"))
         .append("text")
         .attr("x", 2)
-        .attr("y", y(y.ticks().pop()) + 10)
+        .attr("y", y(y.ticks().pop()) -10)
         .attr("dy", "0.1em")
         .attr("fill", "#000")
         .attr("font-weight", "bold")
