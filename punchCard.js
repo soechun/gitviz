@@ -5,7 +5,8 @@ var Days = [
   "We",
   "Th",
   "Fr",
-  "Sa"
+  "Sa",
+  "Avg"
 ];
 var Times = [
   7,
@@ -20,12 +21,15 @@ var Times = [
   16,
   17,
   18,
-  19
+  19,
+  "Average"
 ];
 
 function processPertimeData(result) {
   var length = result.length;
   var temp = [];
+  var perTime = {};
+  var perDay = {};
   for (var i = 0; i < length; i++) {
     var item = result[i];
     var day = Days[item[0]];
@@ -33,8 +37,23 @@ function processPertimeData(result) {
     var commits = item[2];
     if (time >= 7 && time <= 19) {
       temp.push({day: day, time: time, commits: commits});
+      if(!perTime[time]) {
+        perTime[time] = 0;
+      }
+      if(!perDay[day]) {
+        perDay[day] = 0;
+      }
+      perTime[time] += commits;
+      perDay[day] += commits;
     }
   }
+  for(var time in perTime) {
+    temp.push({day: "Avg", time:parseInt(time), commits: Math.floor(perTime[time]/Object.keys(perTime).length)})
+  }
+  for(var day in perDay) {
+    temp.push({day:day, time:"Average", commits: Math.floor(perDay[day]/Object.keys(perDay).length)})
+  }
+  console.log('per day', temp);
   return temp;
 }
 function drawPertimeGraph(data) {
@@ -47,7 +66,7 @@ function drawPertimeGraph(data) {
     },
     width = 1000 - margin.left - margin.right,
     height = 700 - margin.top - margin.bottom,
-    gridSize = Math.floor(width / 13),
+    gridSize = Math.floor(width / 15),
     legendElementWidth = gridSize * 1,
     buckets = 9,
     colors = [
@@ -61,6 +80,11 @@ function drawPertimeGraph(data) {
       "#253494",
       "#081d58"
     ];
+
+  //   // Define the div for the tooltip
+  // var div = d3.select("#svg2").append("div")	
+  // .attr("class", "tooltip")				
+  // .style("opacity", 0);
 
   const svg2 = d3
     .select("#svg2")
@@ -121,6 +145,21 @@ function drawPertimeGraph(data) {
     .attr("y", (d) => Days.indexOf(d.day) * gridSize)
     .attr("rx", 4)
     .attr("ry", 4)
+    .on("mouseover", function(d) {
+      console.log('here')
+      tooltip.transition()		
+      .duration(200)		
+      .style("opacity", 0.9);
+    })
+    .on("mousemove", function(d) {
+      tooltip.html("Number of commits: "+ d.commits)	
+        .style("left", (event.pageX+5) + "px")		
+        .style("top", (event.pageY - 30) + "px")
+    })
+    .on("mouseout", function(d) {
+      tooltip
+      .style("opacity", 0);
+    })
     .attr("class", "time bordered")
     .attr("width", gridSize)
     .attr("height", gridSize)
@@ -128,7 +167,7 @@ function drawPertimeGraph(data) {
     .merge(cards)
     .transition()
     .duration(1000)
-    .style("fill", (d) => colorScale(d.commits));
+    .style("fill", (d) => colorScale(d.commits))
 
   cards
     .select("title")
