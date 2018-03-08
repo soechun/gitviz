@@ -21,6 +21,8 @@ function processParticipationData(data) {
 }
 function drawParticipationGraph(data) {
 
+  console.log(data)
+
   var svg = d3.select("#svg"),
     margin = {
       top: 20,
@@ -34,15 +36,11 @@ function drawParticipationGraph(data) {
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + 20 + ")");
 
-  var parseTime = d3.timeParse("%Y%m%d");
-
-  var x = d3
-      .scaleTime()
-      .range([0, width]),
-    y = d3
-      .scaleLinear()
-      .range([height, 0]),
-    z = d3.scaleOrdinal(d3.schemeCategory10);
+  var x = x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+      y = d3
+        .scaleLinear()
+        .range([height, 0]),
+      z = d3.scaleOrdinal(d3.schemeCategory10);
 
   var line = d3
     .line()
@@ -72,9 +70,7 @@ function drawParticipationGraph(data) {
       };
     });
 
-  x.domain(d3.extent(data, function (d) {
-    return d.week;
-  }));
+  x.domain(data.map(function(d) { return d.week; }));
 
   y.domain([
     d3
