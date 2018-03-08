@@ -78,7 +78,7 @@ function drawLanguageGraph(data) {
         top: 60,
         right: 100,
         bottom: 30,
-        left: 100
+        left: 80
     },
 
     width = +svg1.attr("width") - margin.left - margin.right,
@@ -91,7 +91,7 @@ function drawLanguageGraph(data) {
     let keys = Array.from(data.langSet);
     var rangeList = [];
     var rangeAxisXList = [];
-    barWidth = (width - 200) / (data.len) ;  
+    barWidth = (width - 120) / (data.len) ;  
     var offset=20; 
     for (k = 0; k < data.length; k++) { 
         rangeList.push(offset); 
