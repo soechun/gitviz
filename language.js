@@ -147,6 +147,27 @@ function drawLanguageGraph(data) {
  
         .enter()
         .append("rect")
+        .on("mouseover", function(d) {
+            console.log('here')
+            tooltip.transition()		
+            .duration(200)		
+            .style("opacity", 0.9);
+          })
+          .on("mousemove", function(d) {
+              var value = d.value
+              if(d.value > 1000) {
+                value = (value / 1000).toFixed(2) + "MB";
+              } else {
+                  value = value.toFixed(2) + " KB";
+              }
+            tooltip.html("Size: "+ value+ "</br>Language: " + d.key)	
+              .style("left", (event.pageX+5) + "px")		
+              .style("top", (event.pageY - 50) + "px")
+          })
+          .on("mouseout", function(d) {
+            tooltip
+            .style("opacity", 0);
+          })
         .attr("x", function (d) {
             return repoX1[d.repo](d.key);
         })
