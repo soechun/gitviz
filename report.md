@@ -6,7 +6,7 @@
     3. Languages used in the repositories of the owner of linux github
 ## Contributions
 - Contributors of this project are:
-    1. Yumeng Yin()
+    1. Yumeng Yin(E0227600)
     2. Shwe Soe Chun (E0210469)
 - For every graph, there is a main visualizer and helper.  Yumeng acts as the main visualizer for first and third charts and the second chart is done by Soe Chun. 
 - Task and responsibility allocation
@@ -25,22 +25,43 @@
 ### Method
 - step 1
 ### Justification for visualization 
+1. GitHub API/ scripts
+2. From the previous data preparation, we have the list of all commits of owners and non-reposiitory owners for all previous 52 months. To show the change trend for owners and non-owners, we select the Line graph. For each group (owners, non-owners), we draw a line using d3. First we define the X-Axis using d3.scaleBand ranging from week 52 to week 1 and Y-axis as d3.scaleLinear. After that lines are drawn using different data points for user data for each month. The legend is added to the right side denoting the color used for different user groups.
 - justification
 ### Insight
 - insight 1
+From the final chart, we can find out that the commit from repository is stable and constant in the previous 52 weeks. The commits from non-repository is keep increasing in the previous 52 weeks. The reason of that may be the increase of the number of non-repository users in the previous 52 weeks.
 
 ## 2. Time and day when developers are active (in terms of commit) - Heatmap
 ### Method
 - step 1
 ### Justification for visualization 
+1. GitHub API/ scripts
+2. To visualize total commits per working hour (8.00 am~6.00 pm) of each day (Monday to Sunday), we choose to use heatmap o show the change of commits for different time and different day. 
+After connect all commits counts for different users of each day, we first define the two side of the heatap as Days(Sunday .etc) and Times(the exact time like 8 am). After that the range of commits numbers are divided into 9 groups, denoted by nine color, using d3 function d3.scaleQuantile. As example the colors are representing the number of commits for following 9 range (0, 2), (2, 4), (4, 5), (5, 7), (7, 69), (69, 190), (190, 311), (311, 433), (433,)
+The block for different day and time will be filled using the different colors defined before according to the number of commits.
+
+
 - justification
 ### Insight
 - insight 1
+
+From the heatmap, we can find out that Tuesday 3pm, Wednesday 4pm and Friday 3pm the repo have the most commits. Sataurday have the least commits in the whole week. 
 
 ## 3. Languages used in repositories owned by Linux repository owner - BarChart
 ### Method
 - step 1
 ### Justification for visualization 
+1. GitHub API/ scripts
+2. To the total bytes count of different programming languages used across ALL of specific author, we choose to use scatter bar chart so that we can both display the different languages for each repo and compare between different repos. For the scatter bar chart, we first get the number of categories of languages used for all repos. After that, one color are selected for each of the langues. From our insight of the data, the language byte count is bias that C used in linux repo is almost 70 times of the second most language. In this case, for Y-axis we use d3.scaleLog() so that the display for different languages will be balanced. 
+For X-axis, since not all languages will exist in all repos, for the plot, only the used language will be plot for each repo. To achieve this, a list of languages contained for different repos is created first and used when defining the x-Axis.
+After all preparation, we plot a bar for each language for each repo based on the total count of byte and the color defined for the language.
+
+
 - justification
 ### Insight
 - insight 1
+
+From the scatter bar chart we can find out that linux have the most bytes of codes and linux used most languages in the all repos. Linux and subsurface-for-dirk are the top two which have used more languages than other repos.
+Language C is used mostly for most of the repos.
+In the all repos, repo test-tlb have least codes.
