@@ -39,7 +39,8 @@ From the final chart, we can find out that the commit from repository is stable 
 1. GitHub API/ scripts
 2. To visualize total commits per working hour (8.00 am~6.00 pm) of each day (Monday to Sunday), we choose to use heatmap o show the change of commits for different time and different day. 
 After connect all commits counts for different users of each day, we first define the two side of the heatap as Days(Sunday .etc) and Times(the exact time like 8 am). After that the range of commits numbers are divided into 9 groups, denoted by nine color, using d3 function d3.scaleQuantile. As example the colors are representing the number of commits for following 9 range (0, 2), (2, 4), (4, 5), (5, 7), (7, 69), (69, 190), (190, 311), (311, 433), (433,)
-The block for different day and time will be filled using the different colors defined before according to the number of commits.
+The block for different day and time will be filled using the different colors defined before according to the number of commits. 
+Last but not least, mouse events are added to all blocks to show the number of commits for the block.
 
 
 - justification
@@ -56,6 +57,7 @@ From the heatmap, we can find out that Tuesday 3pm, Wednesday 4pm and Friday 3pm
 2. To the total bytes count of different programming languages used across ALL of specific author, we choose to use scatter bar chart so that we can both display the different languages for each repo and compare between different repos. For the scatter bar chart, we first get the number of categories of languages used for all repos. After that, one color are selected for each of the langues. From our insight of the data, the language byte count is bias that C used in linux repo is almost 70 times of the second most language. In this case, for Y-axis we use d3.scaleLog() so that the display for different languages will be balanced. 
 For X-axis, since not all languages will exist in all repos, for the plot, only the used language will be plot for each repo. To achieve this, a list of languages contained for different repos is created first and used when defining the x-Axis.
 After all preparation, we plot a bar for each language for each repo based on the total count of byte and the color defined for the language.
+Last but not least, mouse event are added to the bar to display the bytes and the language for each bar.
 
 
 - justification
